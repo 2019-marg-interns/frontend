@@ -113,6 +113,8 @@ class DesignPage extends React.Component {
               this.the_canvas.add(this.button[i])
           }
 
+          this.text;
+
           //add text
         //   var text = new fabric.Text('TEST', {
         //       fill: 'black',
@@ -163,24 +165,108 @@ class DesignPage extends React.Component {
             if(j===12) break;
             else if(this.button[j].fill==='blue') break;
         }
-        this.the_canvas.remove(text)
+        
+        
+        this.the_canvas.remove(this.text)
         switch (count) {
-            case 0 : var text = new fabric.Text('0', {
+            case 0 : this.text = new fabric.Text('0', {
                     fill: 'black',
                     top: 360,
                     left: 170,
                     fontSize: 30
                 })
-                this.the_canvas.add(text)
+                this.the_canvas.add(this.text)
                 break;
-            case 1 : var text = new fabric.Text('30', {
+            case 1 : this.text = new fabric.Text('30', {
                     fill: 'black',
                     top: 360,
                     left: 170,
                     fontSize: 30
                 })
-                this.the_canvas.add(text)
+                this.the_canvas.add(this.text)
                 break;
+            case 2 : this.text = new fabric.Text('60', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 3 : this.text = new fabric.Text('90', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 4 : this.text = new fabric.Text('120', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 5 : this.text = new fabric.Text('150', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 6 : this.text = new fabric.Text('180', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 7 : this.text = new fabric.Text('210', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 8 : this.text = new fabric.Text('240', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 9 : this.text = new fabric.Text('270', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 10 : this.text = new fabric.Text('300', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 11 : this.text = new fabric.Text('330', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+
+
             
         }
 
