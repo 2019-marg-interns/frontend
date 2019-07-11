@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {fabric} from 'fabric';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import RoundSlider from './RoundSlider';
+
 
 import MyGroupList from '../GroupPage/MyGroupList';
 import FabricCanvas from './FabricCanvas';
