@@ -1,0 +1,72 @@
+{
+  "name": "react-tabs-redux",
+  "version": "4.0.0",
+  "description": "Simple, fully customizable React tabs component that can be used in plain React application or with any Flux-like architecture, e.g. Redux",
+  "author": "Patrik Piskay",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patrik-piskay/react-tabs-redux"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "tabs",
+    "redux",
+    "flux"
+  ],
+  "files": [
+    "es",
+    "lib",
+    "umd"
+  ],
+  "main": "lib/index.js",
+  "jsnext:main": "es/index.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "scripts": {
+    "start": "nwb serve-react-demo",
+    "build": "nwb build-react-component",
+    "clean": "nwb clean-module && nwb clean-demo",
+    "lint": "eslint src/**/*.js demo/src/*.js",
+    "test": "yarn lint && yarn test:browser",
+    "test:browser": "nwb test --single-run",
+    "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "16.0.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "7.4.0",
+    "husky": "^1.1.2",
+    "lint-staged": "^7.3.0",
+    "nwb": "^0.23.0",
+    "prettier": "^1.14.3",
+    "react": "^16.5.2",
+    "react-addons-test-utils": "^0.14.6",
+    "react-dom": "^16.5.2",
+    "react-redux": "^5.0.7",
+    "react-test-renderer": "^16.5.2",
+    "redux": "^4.0.1",
+    "release-it": "^7.6.2"
+  },
+  "peerDependencies": {
+    "react": "^0.14.5 || >=15"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "prop-types": "^15.6.2"
+  }
+}
