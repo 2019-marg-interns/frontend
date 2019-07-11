@@ -1,0 +1,23 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+
+/frontend/node_modules
+/backend/db.sqlite3
+/backend/homepage/migrations
+/backend/homepage/__pycache__
+/backend/northfacebook_backend/__pycache__
+/backend/env/
+
+# testing
+/frontend/coverage
+
+# production
+/frontend/build
+
+# misc
+.DS_Store
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

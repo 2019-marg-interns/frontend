@@ -1,0 +1,42 @@
+language: generic
+matrix:
+  include:
+    -language: node_js
+    sudo: required
+    node_js: 11.12.0
+    before_install: 
+      - cd ./frontend/
+    install:
+      - npm install 
+    script: 
+      - npm test 
+
+    
+    #-language: python3
+    #virtualenv:
+    #  system_site_packages: true
+    #python: 
+    #  - "3.5"
+    #  - "3.5-dev"
+    #cache: pip3
+    #before_install:
+    #  - sudo apt-get update
+    #  - sudo apt-get install python3.5
+    #  - sudo apt-get -y install python3-pip python-dev
+    #  - sudo python3 -m pip install --upgrade pip
+    #  - sudo pip3 install -U setuptools
+    #  - python3 -V
+    #  - pip3 -V 
+    #  - cd ./backend/
+    #install: 
+    #  - sudo pip3 install -r requirements.txt
+    #script:
+    #  - sudo python3 manage.py test
+
+
+#notifications:
+  #email: sally20921@snu.ac.kr
+
+
+    
+   
