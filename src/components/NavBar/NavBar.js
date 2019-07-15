@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {changeUrl} from '../../actions';
 import Logout from './Logout';
-import Group from './Group';
+//import Group from './Group';
 import Login from './Login';
 import Join from './Join';
 import Profile from './Profile';
@@ -22,7 +22,7 @@ class NavBar extends React.Component {
                  <div className="logo" onClick={() => this.props.onClick()}></div>
                  <nav className="navBar">
                    <ul>
-                     <li><Group/></li>
+                     {/*<li><Group/></li>*/}
                      <li><Mydesign/></li>
                      <li><Profile/></li>
                      <li><Logout/></li>

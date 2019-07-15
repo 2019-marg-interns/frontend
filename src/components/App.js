@@ -10,7 +10,6 @@ import ProfilePage from './ProfilePage/ProfilePage.js';
 import GroupDetailPage from './GroupPage/GroupDetailPage.js';
 
 import PropTypes from 'prop-types';
-import GroupAdminPage from './GroupPage/GroupAdminPage.js';
 
 
 // Used for controlling multiple pages in one frontend project
@@ -24,10 +23,8 @@ const App = ({store}) => {
                     <Route exact path="/log_in" component={LoginPage} />
                     <Route exact path="/sign_up" component={SignUpPage} />
                     <Route exact path="/main" component={MainPage} />
-                 	<Route exact path="/groups" component={GroupPage} />
 					<Route path="/profile/:id" component={ProfilePage} />
                     <Route path="/group/:id" component={GroupDetailPage} />
-                    <Route path="/admin/:id" component={GroupAdminPage} />
                 </div>
             </BrowserRouter>
         </Provider>

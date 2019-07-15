@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import {fabric} from 'fabric';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
+import { changeUrl } from '../../actions';
 
-import MyGroupList from '../GroupPage/MyGroupList';
-import FabricCanvas from './FabricCanvas';
+
+
 
 class DesignPage extends React.Component {
     constructor(props){
@@ -39,6 +40,20 @@ class DesignPage extends React.Component {
                             'mouse:up': this.selectHandler,
                             });
 
+        //add human head 
+        var img = new Image();
+        img.src = "https://i.ibb.co/bXsRWB6/2019-07-11-2-59-59.png";
+        console.log(img);
+        var humanhead = new fabric.Image(img, {
+            left: 206,
+            top: 200,
+            originX: 'center',
+            originY: 'center',
+            scaleX: 0.4,
+            scaleY: 0.4,
+        })
+        this.the_canvas.add(humanhead);     
+
         //add circle
         var circle = new fabric.Circle({
             lockMovementX: true,
@@ -58,39 +73,8 @@ class DesignPage extends React.Component {
         })
         this.the_canvas.add(circle)
 
-         //add center
-        //  var circle2 = new fabric.Circle({
-        //     lockMovementX: true,
-        //     lockMovementY: true,
-        //     selectable: false,
-        //     left: 200,
-        //     top: 200,
-        //     fill: 'red',
-        //     radius: 10,
-        //     hasControls: false, 
-        //     selection: false,
-        //     hasRoatatingPoint: false,
-        //     stroke: 'red',
-        //     strokeWidth: 1,
-        //     originX: 'center',
-        //     originY: 'center', 
-        // })
-
-        //this.the_canvas.add(circle2)
-
-        //add line
-        // var line = new fabric.Line([200,200, 200, 50], {
-        //     fill: 'red',
-        //     stroke: 'red',
-        //     strokeWidth: 1,
-        //     selectable: false,
-        //     evented: false,
-        //   });
-
-        //   this.the_canvas.add(line)
-
-          //add clicking button
-          
+       
+          //add 12 buttons
            this.button = new Array(12);
 
           for (var i =0; i < 12; i++) {
@@ -114,16 +98,6 @@ class DesignPage extends React.Component {
           }
 
           this.text;
-
-          //add text
-        //   var text = new fabric.Text('TEST', {
-        //       fill: 'black',
-        //       top: 360,
-        //       left: 170,
-        //       fontSize: 30
-              
-        //   })
-        //   this.the_canvas.add(text)
           
     }
 
@@ -265,15 +239,8 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-
-
-            
         }
-
-        
-
         this.the_canvas.renderAll();
-        
     }
 
     
@@ -296,6 +263,9 @@ class DesignPage extends React.Component {
                 <div className="aside">
                 <h2 className="h_white">SELECT STYLE</h2>
                 <div className="content">
+                <audio controls>
+                <source src="./1.wav" type="audio/wav"/>
+                </audio>
                 </div>
                 </div>
 
@@ -329,7 +299,7 @@ class DesignPage extends React.Component {
                 <div className="aside">
                 <h2 className="h_black">MY GROUP</h2>
                 <div className="content">
-                {this.props.isLoggedIn? <MyGroupList /> : <center>로그인을 해주세요</center>}
+               
                 </div>
                 </div>
                 </section>
@@ -340,14 +310,14 @@ class DesignPage extends React.Component {
 const mapStateToProps = (state) => ({
     //state authorization is passed as props in designpage 
     isLoggedIn: state.authorization,
-    //profile_user: state.profile_user,
+    profile_user: state.profile_user,
 
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    //onView: () => dispatch(changeUrl('/group/1'))
-    //onClickLogin: () => dispatch(changeUrl('/log_in/')),
-    //onClickJoin: () => dispatch(changeUrl('/sign_up/')),
+    onView: () => dispatch(changeUrl('/group/1')),
+    onClickLogin: () => dispatch(changeUrl('/log_in/')),
+    onClickJoin: () => dispatch(changeUrl('/sign_up/')),
     //receives action onClickLogin and onClickJoin through props
 })
 

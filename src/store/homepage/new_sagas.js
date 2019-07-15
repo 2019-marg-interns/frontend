@@ -1,13 +1,13 @@
 import { put, take, call, fork, select, spawn } from 'redux-saga/effects'
-import {confirmAlert} from 'react-confirm-alert';
+//import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import * as actions from './../../actions/index'
-import { CREATE_GROUP, SEARCH_GROUP, JOIN_GROUP, TO_GROUP_DETAIL, TO_ADMIN_GROUP, LIKE_DESIGN, CHANGE_GROUP_INFO, DELETE_GROUP_USER, DELETE_GRUOP_DESIGN, SAVE_DESIGN, POST_DESIGN, WITHDRAW_GROUP, UNLIKE_DESIGN, DELETE_GROUP, GIVE_ADMIN, NEW_DESIGN, TO_EDIT_DESIGN, UNLIKE_COMMENT, LIKE_COMMENT, ADD_COMMENT, EDIT_COMMENT, DELETE_COMMENT, RESET_DESIGN, EDIT_DESIGN_NAME } from './../../actions/types'
+import { TO_GROUP_DETAIL, TO_EDIT_DESIGN, EDIT_DESIGN_NAME } from './../../actions/types'
 
 var xhr = require('xhr-promise-redux');
 
-const front_url = "http://localhost:3000";
+//const front_url = "http://localhost:3000";
 const fixed_url = "http://localhost:8000/";
 const auth_check_url = fixed_url+'auth/';
 
@@ -49,14 +49,8 @@ export default function *saga() {
                 case 'profile':
                     yield spawn(profilePageSaga);
                     break;
-                case 'groups':
-                    yield spawn(groupPageSaga);
-                    break;
                 case 'group':
                     yield spawn(groupDetailPageSaga);
-                    break;
-                case 'admin':
-                    yield spawn(groupAdminPageSaga);
                     break;
                 default:
                     console.log("default state");
@@ -102,15 +96,6 @@ function *mainPageSaga() {
     console.log("Main Page Saga");
     yield spawn(watchLoginState);
     yield spawn(watchGoToMain);
-
-    yield spawn(watchResetDesign);
-    yield spawn(watchSaveDesign);
-
-    // yield spawn(watchChangeBody);
-    // yield spawn(watchChangeSleeve);
-    // yield spawn(watchChangeBanding);
-    // yield spawn(watchChangeStripe);
-    // yield spawn(watchChangeButton);
 }
 
 function *loggedInMainPageSaga() {
@@ -122,9 +107,7 @@ function *loggedInMainPageSaga() {
 
     yield spawn(watchToProfile);
     yield spawn(watchGoToGroupDetail);
-    yield spawn(watchGoToAdminGroup);
-
-    yield spawn(watchNewDesign);
+   
     yield spawn(watchSaveDesign);
     yield spawn(watchEditDesignName);
 }
@@ -139,20 +122,6 @@ function *profilePageSaga() {
     yield spawn(watchEscape);
 }
 
-function *groupPageSaga() {
-	console.log("Group Page Saga");
-	yield spawn(watchLoginState);
-	yield spawn(watchSignOut);
-	yield spawn(watchGoToMain);
-
-	//SA TODO: 더 추가될 가능성 있음
-	yield spawn(watchCreateGroup);
-	yield spawn(watchSearchGroup);
-    yield spawn(watchJoinGroup);
-    yield spawn(watchWithdrawGroup);
-    yield spawn(watchGoToGroupDetail);
-    yield spawn(watchGoToAdminGroup);
-}
 
 function *groupDetailPageSaga() {
     console.log("Group Detail Page Saga");
@@ -160,37 +129,13 @@ function *groupDetailPageSaga() {
     yield spawn(watchSignOut);
     yield spawn(watchGoToMain);
 
-    yield spawn(watchNewDesign);
-    yield spawn(watchEditDesignName);
     yield spawn(watchToEditDesign);
-    yield spawn(watchPostDesign);
-    yield spawn(watchLikeDesign);
-    yield spawn(watchUnlikeDesign);
-
-    yield spawn(watchAddComment);
-    yield spawn(watchEditComment);
-    yield spawn(watchDeleteComment);
-    yield spawn(watchLikeComment);
-    yield spawn(watchUnlikeComment);
-
-    yield spawn(watchWithdrawGroup);
+   
     yield spawn(watchGoToGroupDetail);
-    yield spawn(watchGoToAdminGroup);
-    yield spawn(watchDeleteGroupDesign);
+
 }
 
-function *groupAdminPageSaga() {
-    console.log("Group Admin Page Saga");
-    yield spawn(watchLoginState);
-    yield spawn(watchSignOut);
-    yield spawn(watchGoToMain);
 
-    yield spawn(watchChangeGrouInfo);
-    yield spawn(watchDeleteGroupUser);
-    yield spawn(watchGiveAdmin);
-    yield spawn(watchDeleteGroupDesign);
-    yield spawn(watchDeleteGroup);
-}
 
 
 
@@ -222,28 +167,10 @@ function *watchLoginState() {
          *   로그인 되어 있지 않은 상태로 가입, 로그인, 초기 페이지에 접근하는 경우
          */
         else {
-            let now_design_data;
-//             console.log("hash: ", window.location.hash)
-
-            try{
-                now_design_data = yield call(xhr.get, fixed_url+'', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // 'Authorization': 'Basic '+localStorage['auth'],
-                        Accept: 'application/json'
-                    },
-                    responsetype: 'json',
-                });
-                console.log("GET now_design data: ", now_design_data.body)
-            } catch(error) {
-                console.log("now_design loading error")
-                console.log(error)
-                alert("데이터 로딩에 실패했습니다.")
-            }
-
+            
             yield put(actions.setState({
                 authorization: "",
-                now_design: now_design_data.body,
+                
                 load: 0,
                 loading: true
             }))
@@ -747,8 +674,6 @@ function *watchGoToMain() {
 
 }
 
-
-
 function *watchToProfile() {
     while(true) {
         const data=yield take('TO_PROFILE');
@@ -778,73 +703,20 @@ function *watchEscape(){
 }
 
 
-/* GroupPage에서 관찰하는 watch 함수들 */
-//watchCreateGroup: GroupPage에서 새로운 그룹 생성 버튼 클릭 관찰 및 리다이렉트(새로운 그룹 detail 페이지로)
-function *watchCreateGroup() {
-	while(true) {
-        const data = yield take(CREATE_GROUP);
-        console.log("watchCreateGroup");
-        yield call(createGroup, data);
-        //SA TODO: groupname은 한글일텐데 url에 넣어도 되는가?
-        //backend에서 redierect 처리
-		//yield put(actions.changeUrl('/group/' + data.groupname + '/'));
-
-	}
-}
-
-//watchSearchGroup: GroupPage에서 그룹 검색 버튼 클릭 관찰
-function *watchSearchGroup() {
-	while(true) {
-        const data = yield take(SEARCH_GROUP);
-        console.log("watchSearchGroup")
-		yield call(searchGroup, data);
-		//SA TODO: 검색 결과로 리다이렉트??
-	}
-}
-
-//watchJoinGroup: GroupPage에서 그룹 가입 버튼 클릭 관찰
-function *watchJoinGroup() {
-	while(true) {
-		const data = yield take(JOIN_GROUP);
-        console.log("watchJoinGroup")
-        yield call(joinGroup, data);
-	}
-}
-
-function *watchWithdrawGroup() {
-    while(true) {
-        const data = yield take(WITHDRAW_GROUP);
-        console.log("watchWithdrawGroup")
-        yield call(withdrawGroup, data);
-    }
-}
 
 //watchGoToGroupDetail: GroupPage 혹은 MainPage에서 MyGroupList의 그룹 클릭 관찰 및 리다이렉트(클릭한 그룹 detail 페이지로)
 function *watchGoToGroupDetail() {
 	while(true) {
-        const data = yield take(TO_GROUP_DETAIL);
+        const data = yield take('TO_GROUP_DETAIL');
         console.log("watchGoToGroupDetail")
 		yield call(toGroupDetail, data);
 		//yield put(actions.changeUrl('/group/' + data.groupname + '/'));
 	}
 }
 
-//watchGoToAdminGroup: GroupPage 혹은 MainPage에서 MyGroupList의 그룹 admin 클릭 관찰 및 리다이렉트(클릭한 그룹 admin 페이지로)
-function *watchGoToAdminGroup() {
-	while(true) {
-        const data = yield take(TO_ADMIN_GROUP);
-        console.log("watchGoToAdminGroup");
-		yield call(toAdminGroup, data);
-		//yield put(actions.changeUrl('/group/' + data.groupname + '/'));
-	}
-}
-
-
-
-
 function *watchEditDesignName() {
     while(true) {
-        const data = yield take(EDIT_DESIGN_NAME);
+        const data = yield take('EDIT_DESIGN_NAME');
         console.log("watchEditDesignName");
         yield call(editDesignName, data);
     }
@@ -852,134 +724,16 @@ function *watchEditDesignName() {
 
 function *watchToEditDesign() {
     while(true) {
-        const data = yield take(TO_EDIT_DESIGN);
+        const data = yield take('TO_EDIT_DESIGN');
         console.log("watchToEditDesign");
         yield call(toEditDesign, data);
     }
 }
 
-function *watchLikeDesign() {
-    while(true) {
-        const data = yield take(LIKE_DESIGN);
-        console.log("watchLikeDesign");
-        yield call(likeDesign, data);
-    }
-}
-
-function *watchUnlikeDesign() {
-    while(true) {
-        const data = yield take(UNLIKE_DESIGN);
-        console.log("watchUnlikeDesign");
-        yield call(unlikeDesign, data);
-    }
-}
-
-
-
-
-function *watchAddComment() {
-    while(true) {
-        const data = yield take(ADD_COMMENT);
-        console.log("watchAddComment");
-        yield call(addComment, data);
-    }
-}
-
-function *watchEditComment() {
-    while(true) {
-        const data = yield take(EDIT_COMMENT);
-        console.log("watchEditComment");
-        yield call(editComment, data);
-    }
-}
-
-function *watchDeleteComment() {
-    while(true) {
-        const data = yield take(DELETE_COMMENT);
-        console.log("watchDeleteComment");
-        yield call(deleteComment, data);
-    }
-}
-
-function *watchLikeComment() {
-    while(true) {
-        const data = yield take(LIKE_COMMENT);
-        console.log("watchLikeComment");
-        yield call(likeComment, data);
-    }
-}
-
-function *watchUnlikeComment() {
-    while(true) {
-        const data = yield take(UNLIKE_COMMENT);
-        console.log("watchUnlikeComment");
-        yield call(unlikeComment, data);
-    }
-}
-
-
-
-
-function *watchChangeGrouInfo() {
-    while(true) {
-        const data = yield take(CHANGE_GROUP_INFO);
-        console.log("watchChangeGroupInfo");
-        yield call(changeGroupInfo, data);
-    }
-}
-
-function *watchDeleteGroupUser() {
-    while(true) {
-        const data = yield take(DELETE_GROUP_USER);
-        console.log("watchDeleteGroupUser");
-        yield call(deleteGroupUser, data);
-    }
-}
-
-function *watchGiveAdmin() {
-    while(true) {
-        const data = yield take(GIVE_ADMIN);
-        console.log("watchGiveAdmin");
-        yield call(giveAdmin, data);
-    }
-}
-
-function *watchDeleteGroupDesign() {
-    while(true) {
-        const data = yield take(DELETE_GRUOP_DESIGN);
-        console.log("watchDeleteGroupDesign");
-        yield call(deleteGroupDesign, data);
-    }
-}
-
-function *watchDeleteGroup() {
-    while(true) {
-        const data = yield take(DELETE_GROUP);
-        console.log("watchDeleteGroup");
-        yield call(deleteGroup, data);
-    }
-}
-
-
-function *watchResetDesign() {
-    while(true) {
-        const data = yield take(RESET_DESIGN);
-        console.log("watchResetDesign");
-        yield call(resetDesign, data);
-    }
-}
-
-function *watchNewDesign() {
-    while(true) {
-        const data = yield take(NEW_DESIGN);
-        console.log("watchNewDesign");
-        yield call(newDesign, data);
-    }
-}
 
 function *watchSaveDesign() {
     while(true) {
-        const data = yield take(SAVE_DESIGN);
+        const data = yield take('SAVE_DESIGN');
         console.log("watchSaveDesign");
         yield call(saveDesign, data);
     }
@@ -987,13 +741,11 @@ function *watchSaveDesign() {
 
 function *watchPostDesign() {
     while(true) {
-        const data = yield take(POST_DESIGN);
+        const data = yield take('POST_DESIGN');
         console.log("watchPostDesign");
         yield call(postDesign, data);
     }
 }
-
-
 
 
 ///// Page별 saga함수에서 쓸 saga함수 (그 외)
@@ -1131,119 +883,7 @@ function *escapeBook(profuser){
     }
 }
 
-// createGroup: 백엔드 groups에 POST를 날리는 함수
-function *createGroup(data){
-    const path = 'create_group/'
-	try {
-		yield call(xhr.post, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json',
-            body: JSON.stringify({"grouptype": data.grouptype.value, "groupname": data.groupname.value})
-        });
-        yield put(actions.changeUrl('/groups/'));
-    } catch(error){
-        if(error.statusCode === 409) {
-            console.log("already existing name");
-            alert("이미 있는 이름입니다")
-            yield put(actions.changeUrl('/groups/'))
-        }
-        else {
-            console.log(error)
-            alert("그룹을 만들 수 없습니다.")
-        }
-    }
-}
 
-function *searchGroup(data){
-    console.log("searchGroup", data.newList)
-    let username = window.atob(localStorage.getItem("auth")).split(":")[0]
-    let all_groups_data, my_groups_data;
-
-    //all_groups data
-    try{
-        all_groups_data = yield call(xhr.get, fixed_url+'groups/', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic '+localStorage['auth'],
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("GET all groups data: ", all_groups_data.body)
-    } catch(error){
-        console.log(error)
-        alert("데이터 로딩에 실패했습니다.")
-    }
-
-    //my_groups data
-    try{
-        my_groups_data = yield call(xhr.get, fixed_url+'groups/'+username+'/', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic '+localStorage['auth'],
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("GET my groups data: ", my_groups_data.body)
-    } catch(error){
-        alert("데이터 로딩에 실패했습니다.")
-    }
-
-    yield put(actions.setState({
-        authorization: window.atob(localStorage['auth']),
-        all_groups: all_groups_data.body,
-        my_groups: my_groups_data.body,
-        filtered_groups: data.newList,
-        load: 0,
-        loading: true
-    }));
-
-}
-
-function *joinGroup(data){
-    console.log("joinGroup")
-    const path = 'join_group/'+data.groupid+'/'
-	try {
-		yield call(xhr.get, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json'
-        });
-        alert("가입되었습니다.")
-        yield put(actions.changeUrl('group/' + data.groupid + '/'));
-    } catch(error){
-        console.log(error)
-        alert("그룹에 가입할 수 없습니다.")
-    }
-}
-
-function *withdrawGroup(data){
-    console.log("withdrawGroup")
-    const path = 'groups/'+data.groupid+'/drop/'
-    try {
-        yield call(xhr.get, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json'
-        });
-        alert("탈퇴하였습니다.")
-        yield put(actions.changeUrl('groups/'));
-    } catch(error) {
-        console.log(error)
-        alert("그룹에서 탈퇴할 수 없습니다.")
-    }
-}
 
 function *toGroupDetail(data){
     console.log("toGroupDetail")
@@ -1309,207 +949,6 @@ function *toEditDesign(data) {
 }
 
 
-function *likeDesign(data) {
-    console.log("likeDesign")
-    const path = 'groups/like/' + data.designid + '/';
-    try {
-		yield call(xhr.get, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json'
-        });
-        // yield put(actions.changeUrl(window.location.pathname));
-    } catch(error){
-        console.log(error)
-        alert("좋아요를 할 수 없습니다.")
-    }
-}
-
-function *unlikeDesign(data) {
-    console.log("unlikeDesign")
-    const path = 'groups/unlike/' + data.designid + '/';
-    try {
-        yield call(xhr.get, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json'
-        });
-        // yield put(actions.changeUrl(window.location.pathname));
-    } catch(error){
-        console.log(error)
-        alert("좋아요를 취소할 수 없습니다.")
-    }
-}
-
-
-
-function *addComment(data) {
-    console.log("addComment data.comment: ", data.name, data.message)
-    const path = 'groups/comment/' + data.designid + '/';
-    try {
-		yield call(xhr.post, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json',
-            body: JSON.stringify({"name": data.name, "comment": data.message})
-        });
-        yield put(actions.changeUrl(window.location.pathname));
-    } catch(error){
-        console.log(error)
-        alert("댓글을 달 수 없습니다.")
-    }
-}
-
-function *editComment(data) {
-    console.log("editComment")
-    const path = 'groups/comment/' + data.designid + '/' + data.commentid + '/';
-    try{
-        yield call(xhr.send, fixed_url+path, {
-            method: 'PUT',
-            headers: {
-                "Authorization": "Basic "+localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json',
-            },
-            responseType:'json',
-            body: JSON.stringify({"name": data.name, "comment": data.message})
-        });
-        console.log("edit comment succeed ");
-        // yield put(actions.changeUrl(window.location.pathname));
-    }catch(error){
-        alert("댓글 수정에 실패했습니다.");
-        return;
-    }
-}
-
-function *deleteComment(data) {
-    console.log("deleteComment")
-    const path = 'groups/comment/' + data.designid + '/' + data.commentid + '/';
-    try{
-        yield call(xhr.send, fixed_url+path,{
-            method : 'DELETE',
-            headers:{
-                'Authorization': 'Basic '+localStorage['auth'],
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("delete comment succeed!");
-        yield put(actions.changeUrl(window.location.pathname));
-    }catch(error){
-        alert("댓글 삭제에 실패했습니다.");
-        return ;
-
-    }
-}
-
-function *likeComment(data) {
-    console.log("likeComment")
-    const path = 'groups/comment/like/' + data.commentid + '/';
-    try {
-		yield call(xhr.get, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json'
-        });
-        // yield put(actions.changeUrl(window.location.pathname));
-    } catch(error){
-        console.log(error)
-        alert("댓글을 좋아요 할 수 없습니다.")
-    }
-}
-
-function *unlikeComment(data) {
-    console.log("unlikeComment")
-    const path = 'groups/comment/unlike/' + data.commentid + '/';
-    try {
-        yield call(xhr.get, fixed_url + path, {
-            headers: {
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            contentType: 'json'
-        });
-        // yield put(actions.changeUrl(window.location.pathname));
-    } catch(error){
-        console.log(error)
-        alert("댓글 좋아요를 취소할 수 없습니다.")
-    }
-}
-
-
-
-
-function *changeGroupInfo(data) {
-    console.log("chageGroupInfo")
-    const backPath = 'groups/'+data.groupid+'/admin/';
-    let form = new FormData();
-    try{
-        console.log("data.grouptype: ", data.grouptype)
-        form.append('group_type', data.grouptype);
-        form.append('group_name', data.groupname);
-        console.log("form: ", form, data.grouptype, data.groupname)
-        yield call(xhr.send, fixed_url+backPath, {
-            method: 'PUT',
-            headers: {
-                "Authorization": "Basic "+localStorage['auth'],
-            },
-            async: true,
-            crossDomain: true,
-            processData: false,
-            contentType: false,
-            mimeType: "multipart/form-data",
-            body: form
-          });
-        console.log("change groupinfo succeed ");
-        yield put(actions.changeUrl('/admin/'+data.groupid+'/'));
-    }catch(error){
-        console.log(error)
-        console.log("form: ", form['group_type'])
-        alert("그룹 정보를 수정할 수 없습니다.");
-        return;
-    }
-}
-
-function *deleteGroupUser(data) {
-    console.log("deleteGroupUser groupid: ", data.groupid, " userid: ", data.userid)
-    const backPath = 'groups/'+data.groupid+'/members/'+data.userid+'/';
-    try{
-        yield call(xhr.send, fixed_url+backPath,{
-            method : 'DELETE',
-            headers:{
-                'Authorization': 'Basic '+localStorage['auth'],
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("delete user succeed!");
-        alert("퇴장시켰습니다.")
-        yield put(actions.changeUrl('/admin/'+data.groupid+'/'));
-    }catch(error){
-        if(error.statusCode === 400) {
-            console.log("cannot delete oneself");
-            alert("본인은 삭제할 수 없습니다.")
-        }
-        else {
-            console.log(error)
-            alert("해당 멤버를 퇴장시킬 수 없습니다.");
-        }
-    }
-}
 
 function *giveAdmin(data) {
     console.log("giveAdmin groupid: ", data.groupid, " userid: ", data.userid)
@@ -1534,93 +973,8 @@ function *giveAdmin(data) {
     }
 }
 
-function *deleteGroupDesign(data) {
-    console.log("deleteGroupDesign groupid: ", data.groupid, " designid: ", data.designid)
-    const backPath = 'groups/delete/'+data.designid+'/';
-    try{
-        yield call(xhr.get, fixed_url+backPath,{
-            headers:{
-                "Authorization": "Basic " + localStorage['auth'],
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("delete design succeed!");
-        alert("삭제되었습니다.")
-        yield put(actions.changeUrl('/group/'+data.groupid+'/'));
-    }catch(error){
-        console.log(error)
-        alert("해당 디자인을 삭제할 수 없습니다.");
-        return ;
-
-    }
-}
-
-function *deleteGroup(data) {
-    console.log("deleteGroup groupid: ", data.groupid)
-    const backPath = 'groups/'+data.groupid+'/admin/';
-    try{
-        yield call(xhr.send, fixed_url+backPath,{
-            method : 'DELETE',
-            headers:{
-                'Authorization': 'Basic '+localStorage['auth'],
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("delete group succeed!");
-        alert("삭제되었습니다.")
-        yield put(actions.changeUrl('/groups/'));
-    }catch(error){
-        console.log(error)
-        alert("그룹을 삭제할 수 없습니다.");
-        return ;
-    }
-}
 
 
-
-function *resetDesign(data) {
-    console.log("resetDesign")
-    const backPath = '';
-    try{
-        yield call(xhr.get, fixed_url+backPath,{
-            headers:{
-                "Content-Type": 'application/json',
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("reset design succeed!");
-        yield put(actions.changeUrl('/'));
-    }catch(error){
-        console.log(error);
-        alert("디자인을 리셋하는데 실패했습니다.");
-        return;
-    }
-}
-
-function *newDesign(data) {
-    console.log("newDesign")
-    const backPath = '';
-    try {
-        yield call(xhr.send, fixed_url+backPath,{
-            method : 'DELETE',
-            headers:{
-                'Authorization': 'Basic '+localStorage['auth'],
-                Accept: 'application/json'
-            },
-            responseType: 'json',
-        });
-        console.log("new design succeed!");
-        yield put(actions.changeUrl('/main/'));
-    }catch(error) {
-        console.log(error);
-        alert("새로운 디자인을 불러오는데 실패했습니다.");
-        return;
-    }
-}
 
 function *saveDesign(data) {
     console.log("saveDesign designid: ", data.designid, " designname: ", data.designname, " design: ", data.design, " text: ", data.text, " image: ", data.image, " logo: ", data.logo)
