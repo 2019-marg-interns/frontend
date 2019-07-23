@@ -1,11 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fabric} from 'fabric';
+
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { changeUrl } from '../../actions';
-
-
+import { toSaveDesign, changeUrl, toResetDesign } from '../../actions';
+import GroupDesignList from '../GroupPage/GroupDesignList.js';
 
 
 class DesignPage extends React.Component {
@@ -14,15 +15,20 @@ class DesignPage extends React.Component {
         super(props);
 
         this.state = {
-            value: 0
+            value: this.props.now_design.design,
+
         };
 
         this.selectHandler = this.selectHandler.bind(this);
         this.setValue = this.setValue.bind(this);
+        this.clickedSubmit = this.clickedSubmit.bind(this);
+        this.clickedLoggedOutSubmit = this.clickedLoggedOutSubmit.bind(this);
+        this.resetDesignCheck = this.resetDesignCheck.bind(this);
     }
 
     componentWillMount() {
         console.log("DesignPage - componentWillMount")
+       
     }
 
     componentDidMount() {
@@ -53,6 +59,7 @@ class DesignPage extends React.Component {
             scaleY: 0.4,
         })
         this.the_canvas.add(humanhead);     
+        
 
         //add circle
         var circle = new fabric.Circle({
@@ -74,18 +81,18 @@ class DesignPage extends React.Component {
         this.the_canvas.add(circle)
 
        
-          //add 12 buttons
-           this.button = new Array(12);
+          //add 18 buttons
+           this.button = new Array(18);
 
-          for (var i =0; i < 12; i++) {
+          for (var i =0; i < 18; i++) {
               this.button[i] = new fabric.Circle({
                   lockMovementX: true,
                   lockMovementY: true,
                   selectable: false,
-                  left: 200 + 150 * Math.sin(i*Math.PI/6),
-                  top: 200 - 150 * Math.cos(i*Math.PI/6),
+                  left: 200 + 150 * Math.sin(i*Math.PI/9),
+                  top: 200 - 150 * Math.cos(i*Math.PI/9),
                   fill: 'red',
-                  radius: 10,
+                  radius: 8,
                   hasControls: false,
                   selection: false,
                   hasRoatatingPoint: false,
@@ -96,6 +103,9 @@ class DesignPage extends React.Component {
               })
               this.the_canvas.add(this.button[i])
           }
+
+          this.the_canvas.renderAll();
+          this.forceUpdate();
 
           this.text;
           
@@ -119,7 +129,7 @@ class DesignPage extends React.Component {
 
         let selectedObject = e.target;
         if(selectedObject.fill === 'red'){
-            for(const j = 0; j < 12; j++){
+            for(const j = 0; j < 18; j++){
                 this.button[j].set({
                     fill: 'red',
                 });
@@ -134,12 +144,14 @@ class DesignPage extends React.Component {
             });
         }
         let count = 0;
-        for(const j = 0; j<13; j++){
+        for(const j = 0; j<19; j++){
             count = j;
-            if(j===12) break;
+            if(j===18) break;
             else if(this.button[j].fill==='blue') break;
         }
         
+        this.state.value = count;
+        console.log(this.state.value);
         
         this.the_canvas.remove(this.text)
         switch (count) {
@@ -151,7 +163,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 1 : this.text = new fabric.Text('30', {
+            case 1 : this.text = new fabric.Text('20', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -159,7 +171,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 2 : this.text = new fabric.Text('60', {
+            case 2 : this.text = new fabric.Text('40', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -167,7 +179,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 3 : this.text = new fabric.Text('90', {
+            case 3 : this.text = new fabric.Text('60', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -175,7 +187,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 4 : this.text = new fabric.Text('120', {
+            case 4 : this.text = new fabric.Text('80', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -183,7 +195,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 5 : this.text = new fabric.Text('150', {
+            case 5 : this.text = new fabric.Text('100', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -191,7 +203,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 6 : this.text = new fabric.Text('180', {
+            case 6 : this.text = new fabric.Text('120', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -199,7 +211,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 7 : this.text = new fabric.Text('210', {
+            case 7 : this.text = new fabric.Text('140', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -207,7 +219,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 8 : this.text = new fabric.Text('240', {
+            case 8 : this.text = new fabric.Text('160', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -215,7 +227,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 9 : this.text = new fabric.Text('270', {
+            case 9 : this.text = new fabric.Text('180', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -223,7 +235,7 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 10 : this.text = new fabric.Text('300', {
+            case 10 : this.text = new fabric.Text('200', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -231,7 +243,55 @@ class DesignPage extends React.Component {
                 })
                 this.the_canvas.add(this.text)
                 break;
-            case 11 : this.text = new fabric.Text('330', {
+            case 11 : this.text = new fabric.Text('220', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 12 : this.text = new fabric.Text('240', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 13 : this.text = new fabric.Text('260', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 14 : this.text = new fabric.Text('280', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 15 : this.text = new fabric.Text('300', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 16 : this.text = new fabric.Text('320', {
+                    fill: 'black',
+                    top: 360,
+                    left: 170,
+                    fontSize: 30
+                })
+                this.the_canvas.add(this.text)
+                break;
+            case 17 : this.text = new fabric.Text('340', {
                     fill: 'black',
                     top: 360,
                     left: 170,
@@ -242,7 +302,6 @@ class DesignPage extends React.Component {
         }
         this.the_canvas.renderAll();
     }
-
     
     setValue = (value) => {
         console.log(value);
@@ -251,8 +310,18 @@ class DesignPage extends React.Component {
 
     clickedSubmit = (e) => {
         window.alert("submitted");
+        this.props.onSave(this.props.now_design.id, this.state.value);
     }
 
+
+    clickedLoggedOutSubmit = () => {
+        window.alert("in order to submit, you must log in");
+    }
+
+    resetDesignCheck() {
+       
+    }
+    
     render() {
         return (
                 <section className="wrap clear col3">
@@ -265,6 +334,8 @@ class DesignPage extends React.Component {
                 <div className="content">
                 <audio controls>
                 <source src="./1.wav" type="audio/wav"/>
+                <source src="./1.mp3" type="audio/mpeg"/>
+                Your browser does not support the audio element.
                 </audio>
                 </div>
                 </div>
@@ -282,16 +353,39 @@ class DesignPage extends React.Component {
                   =========================================-->*/}
                 {/*<RoundSlider/>*/}
                 <div id="slider"></div>
+
                 <div id="plain-react">
+
                 <div classname="canvas-bg">
-                <canvas id="canvas" />
+                <canvas id="canvas"/>
                 </div>
+
                 <br/> 
                 <br/>
-                <button onClick = {this.clickedSubmit}>Submit</button>
+                {/*<button onClick = {this.clickedSubmit}>Submit</button>*/}
+
+                {/*<!--========================================
+                  NEW & SAVE Button Section
+                  =========================================-->*/}
+                {this.props.isLoggedIn?
+                // 로그인되어 있는 경우 - new(새로운 디자인 시작), save(현재 디자인 유저 그룹에 저장)
+                (<div>
+                 <button className="button rst_btn" type="button" onClick={() => this.resetDesignCheck}>RESET</button>
+                 <button className="button save_btn" type="button" onClick={this.clickedSubmit}>SUBMIT</button>
+                 </div>)
+                // 로그인되어 있지 않은 경우 
+                : <div>
+                <button className="button rst_btn" type="button" onClick={() => this.resetDesignCheck}>RESET</button>
+                <button className="button save_btn" type="button" onClick={this.onClickLoggedOutSubmit}>SUBMIT</button>
+                </div>
+                }
+
+                
                 </div>
                 </div>
                 </div>
+
+                
 
                 {/*<!--========================================
                   RIGHT SIDE BAR
@@ -299,7 +393,13 @@ class DesignPage extends React.Component {
                 <div className="aside">
                 <h2 className="h_black">MY GROUP</h2>
                 <div className="content">
-               
+                {/*<GroupDesignList/>*/}
+                {/*{this.props.my_designs.map(design =>
+                  <GroupDesignList
+                    key={design.id}
+                    design={design}
+                  />
+                )}*/}
                 </div>
                 </div>
                 </section>
@@ -311,13 +411,14 @@ const mapStateToProps = (state) => ({
     //state authorization is passed as props in designpage 
     isLoggedIn: state.authorization,
     profile_user: state.profile_user,
-
+    now_design: state.now_design,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    onView: () => dispatch(changeUrl('/group/1')),
     onClickLogin: () => dispatch(changeUrl('/log_in/')),
     onClickJoin: () => dispatch(changeUrl('/sign_up/')),
+    onSave: (designid, design) => dispatch(toSaveDesign(designid, design)),
+    onReset: () => dispatch(toResetDesign()),
     //receives action onClickLogin and onClickJoin through props
 })
 

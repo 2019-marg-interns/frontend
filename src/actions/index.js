@@ -13,6 +13,7 @@ export const signIn = (username, password) => {
         password
     }
 }
+export const SIGN_IN = 'SIGN_IN'
 
 // When the user is authenticated and succeeds to sign in, this action is invoked by Saga and reducer stores the user's authorization to its state.
 export const authenticate = (auth) => {
@@ -27,7 +28,7 @@ export const postSignUp = (username, password) => {
     return {
         type: 'POST_SIGN_UP',
         username,
-        password
+        password,
     }
 }
 
@@ -91,14 +92,14 @@ export const gotoGroupDetail = (groupid) => {
 	}
 }
 
-export const gotoEditDesign = (designid) => {
+/*export const gotoEditDesign = (designid) => {
     console.log("gotoEditDesign action")
     console.log(designid)
     return {
         type: 'TO_EDIT_DESIGN',
         designid: designid,
     }
-}
+}*/
 
 export const toSaveDesign = (designid, design) => {
     return {
@@ -107,3 +108,23 @@ export const toSaveDesign = (designid, design) => {
         design: design,
     }
 }
+
+export const SAVE_DESIGN = 'SAVE_DESIGN'
+
+export const toResetDesign = () => {
+    return {
+        type: 'RESET_DESIGN'
+    }
+}
+
+export const RESET_DESIGN = 'RESET_DESIGN'
+
+export const toPostDesign = (designid, groupid) => {
+    return {
+        type: 'POST_DESIGN',
+        designid: designid,
+        groupid: groupid,
+    }
+}
+
+export const POST_DESIGN = 'POST_DESIGN'

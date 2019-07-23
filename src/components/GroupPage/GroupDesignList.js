@@ -23,7 +23,6 @@ class GroupDesignList extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-
     my_designs: state.my_designs,
 })
 

@@ -22,8 +22,7 @@ class MainPage extends React.Component {
       return (
         <div className="app">
           < NavBar/>
-          
-      <DesignPage/>
+          <DesignPage/>
         </div>
       )
 

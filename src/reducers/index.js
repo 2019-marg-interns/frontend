@@ -1,9 +1,13 @@
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
+//import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
 
 const homepageInitialState = {
     authorization: "",
     profile_id_pw: null,
     profile_user: null,
+
+    // my_groups: [],
+    // now_group: null,
+    // group_designs: [],
 
     now_design: {}, //현재 메인 페이지에서 작업 중인(화면에 보이는) 디자인
     my_designs: [],

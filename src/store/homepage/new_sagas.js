@@ -1,9 +1,8 @@
-import { put, take, call, fork, select, spawn } from 'redux-saga/effects'
+import { put, take, call, select, spawn } from 'redux-saga/effects'
 //import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import * as actions from './../../actions/index'
-import { TO_GROUP_DETAIL, TO_EDIT_DESIGN, EDIT_DESIGN_NAME } from './../../actions/types'
 
 var xhr = require('xhr-promise-redux');
 
@@ -109,7 +108,6 @@ function *loggedInMainPageSaga() {
     yield spawn(watchGoToGroupDetail);
    
     yield spawn(watchSaveDesign);
-    yield spawn(watchEditDesignName);
 }
 
 function *profilePageSaga() {
@@ -130,14 +128,9 @@ function *groupDetailPageSaga() {
     yield spawn(watchGoToMain);
 
     yield spawn(watchToEditDesign);
-   
     yield spawn(watchGoToGroupDetail);
 
 }
-
-
-
-
 
 ///// Page별 saga함수에서 쓸 saga함수들 (watch 함수 편)
 // watchLoginState: 브라우저에서의 로그인 여부 확인 및 state 업데이트
@@ -193,13 +186,15 @@ function *watchLoginState() {
             let username = window.atob(localStorage.getItem("auth")).split(":")[0]
             console.log("username: ", username)
             console.log(yield select())
-            let data, parent_data;
+            //let data, parent_data;
 
             /* =====================================================================================
                                                     메인 페이지                      
             =======================================================================================*/
             if(path === '/main/') { 
-                let profile_user_data, my_groups_data, now_design_data;
+                let profile_user_data;
+                //let my_groups_data;
+                let now_design_data;
 
                 // 유저 정보
                 try{
@@ -236,27 +231,28 @@ function *watchLoginState() {
                 }
 
                 // 내 그룹 정보
-                try {
-                    my_groups_data = yield call(xhr.get, fixed_url+'groups/'+username+'/', {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic '+localStorage['auth'],
-                            Accept: 'application/json'
-                        },
-                        responseType: 'json',
-                    });
-                    console.log("GET my groups data: ", my_groups_data.body)
-                } catch(error) {
-                    console.log("my_groups loading error")
-                    console.log(error)
-                    alert("데이터 로딩에 실패했습니다.");
-                }
+                // try {
+                //     my_groups_data = yield call(xhr.get, fixed_url+'groups/'+username+'/', {
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             'Authorization': 'Basic '+localStorage['auth'],
+                //             Accept: 'application/json'
+                //         },
+                //         responseType: 'json',
+                //     });
+                //     console.log("GET my groups data: ", my_groups_data.body)
+                // } catch(error) {
+                //     console.log("my_groups loading error")
+                //     console.log(error)
+                //     alert("데이터 로딩에 실패했습니다.");
+                // }
 
                 yield put(actions.setState({
                     authorization: window.atob(localStorage['auth']),
                     profile_user: profile_user_data.body,
                     now_design: now_design_data.body,
-                    my_groups: my_groups_data.body,
+
+                    // my_groups: my_groups_data.body,
                     load: 0,
                     loading: true
                     //TODO 이후 state 추가 시 여기에 스테이트 업데이트 추가
@@ -267,71 +263,71 @@ function *watchLoginState() {
             /* =====================================================================================
                                                     그룹 페이지                      
             =======================================================================================*/
-            else if(path === '/groups/') {
-                console.log("get group details...");
-                let profile_user_data, all_groups_data, my_groups_data;
+            // else if(path === '/groups/') {
+            //     console.log("get group details...");
+            //     let profile_user_data, all_groups_data, my_groups_data;
 
-                // 유저 정보
-                try{
-                    profile_user_data = yield call(xhr.get, fixed_url+'profile/', {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic '+localStorage['auth'],
-                            Accept: 'application/json'
-                        },
-                        responsetype: 'json',
-                    });
-                    console.log("GET profile_user data: ", profile_user_data.body)
-                } catch(error) {
-                    console.log("profile_user loading error")
-                    console.log(error)
-                    alert("데이터 로딩에 실패했습니다.")
-                }
+            //     // 유저 정보
+            //     try{
+            //         profile_user_data = yield call(xhr.get, fixed_url+'profile/', {
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': 'Basic '+localStorage['auth'],
+            //                 Accept: 'application/json'
+            //             },
+            //             responsetype: 'json',
+            //         });
+            //         console.log("GET profile_user data: ", profile_user_data.body)
+            //     } catch(error) {
+            //         console.log("profile_user loading error")
+            //         console.log(error)
+            //         alert("데이터 로딩에 실패했습니다.")
+            //     }
 
-                // 전체 그룹 정보
-                try{
-                    all_groups_data = yield call(xhr.get, fixed_url+'groups/', {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic '+localStorage['auth'],
-                            Accept: 'application/json'
-                        },
-                        responseType: 'json',
-                    });
-                    console.log("GET all groups data: ", all_groups_data.body)
-                } catch(error){
-                    console.log("all_groups loading error")
-                    console.log(error)
-                    alert("데이터 로딩에 실패했습니다.")
-                }
+            //     // 전체 그룹 정보
+            //     /*try{
+            //         all_groups_data = yield call(xhr.get, fixed_url+'groups/', {
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': 'Basic '+localStorage['auth'],
+            //                 Accept: 'application/json'
+            //             },
+            //             responseType: 'json',
+            //         });
+            //         console.log("GET all groups data: ", all_groups_data.body)
+            //     } catch(error){
+            //         console.log("all_groups loading error")
+            //         console.log(error)
+            //         alert("데이터 로딩에 실패했습니다.")
+            //     }*/
 
-                // 내 그룹 정보
-                try{
-                    my_groups_data = yield call(xhr.get, fixed_url+'groups/'+username+'/', {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic '+localStorage['auth'],
-                            Accept: 'application/json'
-                        },
-                        responseType: 'json',
-                    });
-                    console.log("GET my groups data: ", my_groups_data.body)
-                } catch(error){
-                    console.log("my_groups loading error")
-                    console.log(error)
-                    alert("데이터 로딩에 실패했습니다.")
-                }
+            //     // 내 그룹 정보
+            //     try{
+            //         my_groups_data = yield call(xhr.get, fixed_url+'groups/'+username+'/', {
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': 'Basic '+localStorage['auth'],
+            //                 Accept: 'application/json'
+            //             },
+            //             responseType: 'json',
+            //         });
+            //         console.log("GET my groups data: ", my_groups_data.body)
+            //     } catch(error){
+            //         console.log("my_groups loading error")
+            //         console.log(error)
+            //         alert("데이터 로딩에 실패했습니다.")
+            //     }
 
-                yield put(actions.setState({
-                    authorization: window.atob(localStorage['auth']),
-                    profile_user: profile_user_data.body,
-                    all_groups: all_groups_data.body,
-                    my_groups: my_groups_data.body,
-                    filtered_groups: all_groups_data.body,
-                    load: 0,
-                    loading: true,
-                }))
-            }
+            //     yield put(actions.setState({
+            //         authorization: window.atob(localStorage['auth']),
+            //         profile_user: profile_user_data.body,
+            //         //all_groups: all_groups_data.body,
+            //         my_groups: my_groups_data.body,
+            //         //filtered_groups: all_groups_data.body,
+            //         load: 0,
+            //         loading: true,
+            //     }))
+            // }
 
 
             /* 
@@ -519,9 +515,7 @@ function *watchLoginState() {
                     yield put(actions.setState({
                         authorization: window.atob(localStorage['auth']),
                         profile_user: profile_user_data.body,
-                        now_group: now_group_data.body[0],
-                        my_groups: my_groups_data.body,
-                        group_designs: group_designs_data.body,
+                        
                         my_designs: my_designs_data.body,
                         load: 0,
                         loading: true
@@ -739,13 +733,13 @@ function *watchSaveDesign() {
     }
 }
 
-function *watchPostDesign() {
+/*function *watchPostDesign() {
     while(true) {
         const data = yield take('POST_DESIGN');
         console.log("watchPostDesign");
         yield call(postDesign, data);
     }
-}
+}*/
 
 
 ///// Page별 saga함수에서 쓸 saga함수 (그 외)
@@ -977,7 +971,7 @@ function *giveAdmin(data) {
 
 
 function *saveDesign(data) {
-    console.log("saveDesign designid: ", data.designid, " designname: ", data.designname, " design: ", data.design, " text: ", data.text, " image: ", data.image, " logo: ", data.logo)
+    console.log("saveDesign designid: ", data.designid, " design: ", data.design, )
     const backPath = '';
     let profile_user_data, design_data = null;
 
@@ -996,23 +990,8 @@ function *saveDesign(data) {
                 responseType:'json',
                 body: JSON.stringify({
                     "id": data.designid,
-                    "name": data.designname,
-                    "design": {
-                        "body": data.design["body"],
-                        "sleeve": data.design["sleeve"],
-                        "banding": data.design["banding"],
-                        "stripe": data.design["stripe"],
-                        "button": data.design["button"],
-                    },
-                    "text": data.text,
-                    "image": {
-                        "frontImg": data.image["frontImg"],
-                        "backImg": data.image["backImg"]
-                    },
-                    "logo": {
-                        "front": data.logo["front"],
-                        "back": data.logo["back"]
-                    }
+                    
+                    "design": data.design,
                 })
             });
             console.log("save design succeed design id: ", design_data.body.id);
@@ -1054,23 +1033,7 @@ function *saveDesign(data) {
                 responseType:'json',
                 body: JSON.stringify({
                     "id": data.designid,
-                    "name": data.designname,
-                    "design": {
-                        "body": data.design["body"],
-                        "sleeve": data.design["sleeve"],
-                        "banding": data.design["banding"],
-                        "stripe": data.design["stripe"],
-                        "button": data.design["button"],
-                    },
-                    "text": data.text,
-                    "image": {
-                        "frontImg": data.image["frontImg"],
-                        "backImg": data.image["backImg"]
-                    },
-                    "logo": {
-                        "front": data.logo["front"],
-                        "back": data.logo["back"]
-                    }
+                    "design": data.design,
                 })
             });
             console.log("save design succeed ");
@@ -1085,7 +1048,7 @@ function *saveDesign(data) {
     
 }
 
-function *postDesign(data) {
+/*function *postDesign(data) {
     console.log("postDesign designid: ", data.designid, " groupid: ", data.groupid)
     const backPath = 'groups/'+data.groupid+'/post/'+data.designid+'/';
     // let temp;
@@ -1135,4 +1098,4 @@ function *postDesign(data) {
         alert("디자인을 게시할 수 없습니다.");
         return ;
     }
-}
+}*/
