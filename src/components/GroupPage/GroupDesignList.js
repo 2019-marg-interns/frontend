@@ -10,7 +10,7 @@ class GroupDesignList extends React.Component {
         return (
             <div>
                 {this.props.my_designs.map(design =>
-                    <ul key={design.id}>
+                    <ul key={design.index}>
                     <div className="DesignList-Button-Field">
                        <span>{design.design}</span>
                     </div>

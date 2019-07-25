@@ -22,6 +22,7 @@ export const authenticate = (auth) => {
         auth
     }
 }
+export const AUTHENTICATE = 'AUTHENTICATE'
 
 // When the user enters username, password and pwdverification and clicks the '회원가입', this action is invocked and Saga requests POST to 'User List' in backend page.
 export const postSignUp = (username, password) => {
@@ -31,6 +32,8 @@ export const postSignUp = (username, password) => {
         password,
     }
 }
+
+export const POST_SIGN_UP = 'POST_SIGN_UP'
 
 //When the user clicks the 'Sign Out' button, this action is invoked
 export const signOut = () => {
@@ -101,30 +104,29 @@ export const gotoGroupDetail = (groupid) => {
     }
 }*/
 
-export const toSaveDesign = (designid, design) => {
+export const toSaveDesign = (value) => {
     return {
         type: 'SAVE_DESIGN',
-        designid: designid, 
-        design: design,
+        value: value,
     }
 }
 
 export const SAVE_DESIGN = 'SAVE_DESIGN'
 
-export const toResetDesign = () => {
-    return {
-        type: 'RESET_DESIGN'
-    }
-}
+// export const toResetDesign = () => {
+//     return {
+//         type: 'RESET_DESIGN'
+//     }
+// }
 
-export const RESET_DESIGN = 'RESET_DESIGN'
+// export const RESET_DESIGN = 'RESET_DESIGN'
 
-export const toPostDesign = (designid, groupid) => {
-    return {
-        type: 'POST_DESIGN',
-        designid: designid,
-        groupid: groupid,
-    }
-}
+// export const toPostDesign = (designid, groupid) => {
+//     return {
+//         type: 'POST_DESIGN',
+//         designid: designid,
+//         groupid: groupid,
+//     }
+// }
 
-export const POST_DESIGN = 'POST_DESIGN'
+// export const POST_DESIGN = 'POST_DESIGN'

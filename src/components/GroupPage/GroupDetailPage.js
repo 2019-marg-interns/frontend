@@ -37,7 +37,7 @@ class GroupDetailPage extends React.Component {
               <ul>
                 {this.props.my_designs.map(design =>
                   <GroupDesignList
-                    key={design.id}
+                    key={design.index}
                     design={design}
                   />
                 )}

@@ -23,7 +23,7 @@ class NavBar extends React.Component {
                  <nav className="navBar">
                    <ul>
                      {/*<li><Group/></li>*/}
-                     <li><Mydesign/></li>
+                     {/*<li><Mydesign/></li>*/}
                      <li><Profile/></li>
                      <li><Logout/></li>
                    </ul>

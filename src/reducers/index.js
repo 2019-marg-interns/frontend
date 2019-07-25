@@ -9,8 +9,9 @@ const homepageInitialState = {
     // now_group: null,
     // group_designs: [],
 
-    now_design: {}, //현재 메인 페이지에서 작업 중인(화면에 보이는) 디자인
-    my_designs: [],
+    // now_design: {}, //현재 메인 페이지에서 작업 중인(화면에 보이는) 디자인
+    //now_design에 index, designid, design이 있다. 
+    // my_designs: [],
 
     load : 0,
     loading: false,
@@ -39,8 +40,8 @@ const homepage = (state = homepageInitialState, action) => {
                 profile_id_pw: action.state.profile_id_pw,
                 profile_user: action.state.profile_user,
                 
-                now_design: action.state.now_design,
-                my_designs: action.state.my_designs,
+                // now_design: action.state.now_design,
+                // my_designs: action.state.my_designs,
 
                 load : action.state.load,
                 loading: action.state.loading,

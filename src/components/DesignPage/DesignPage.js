@@ -2,11 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {fabric} from 'fabric';
 
-import {confirmAlert} from 'react-confirm-alert';
+//import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { toSaveDesign, changeUrl, toResetDesign } from '../../actions';
-import GroupDesignList from '../GroupPage/GroupDesignList.js';
+import { toSaveDesign, changeUrl} from '../../actions';
+//import GroupDesignList from '../GroupPage/GroupDesignList.js';
 
 
 class DesignPage extends React.Component {
@@ -15,7 +15,10 @@ class DesignPage extends React.Component {
         super(props);
 
         this.state = {
-            value: this.props.now_design.design,
+            //index: this.props.now_design.index,
+            //value: this.props.now_design.design,
+            //value: 0,
+            value: [],
 
         };
 
@@ -23,7 +26,7 @@ class DesignPage extends React.Component {
         this.setValue = this.setValue.bind(this);
         this.clickedSubmit = this.clickedSubmit.bind(this);
         this.clickedLoggedOutSubmit = this.clickedLoggedOutSubmit.bind(this);
-        this.resetDesignCheck = this.resetDesignCheck.bind(this);
+        this.clickedNext = this.clickedNext.bind(this);
     }
 
     componentWillMount() {
@@ -150,7 +153,8 @@ class DesignPage extends React.Component {
             else if(this.button[j].fill==='blue') break;
         }
         
-        this.state.value = count;
+        //push values to this.state.value array 
+        this.state.value.push(count);
         console.log(this.state.value);
         
         this.the_canvas.remove(this.text)
@@ -304,13 +308,13 @@ class DesignPage extends React.Component {
     }
     
     setValue = (value) => {
-        console.log(value);
-        this.setState({value: value});
+        // console.log(value);
+        // this.setState({value: value});
     }     
 
     clickedSubmit = (e) => {
         window.alert("submitted");
-        this.props.onSave(this.props.now_design.id, this.state.value);
+        this.props.onSave(this.state.value);
     }
 
 
@@ -318,7 +322,7 @@ class DesignPage extends React.Component {
         window.alert("in order to submit, you must log in");
     }
 
-    resetDesignCheck() {
+    clickedNext() {
        
     }
     
@@ -329,7 +333,17 @@ class DesignPage extends React.Component {
                 {/*<!--========================================
                   LEFT SIDE BAR
                   =========================================-->*/}
-                <div className="aside">
+                  <div className = "aside">
+                  <h2 className="h_white">AUDIO</h2>
+                  <div className="content">
+                  <audio controls>
+                  <source src="./1.wav" type="audio/wav"/>
+                  <source src="./1.mp3" type="audio/mpeg"/>
+                   Your browser does not support the audio element.
+                  </audio>
+                  </div>
+                  </div>
+                {/*<div className="aside">
                 <h2 className="h_white">SELECT STYLE</h2>
                 <div className="content">
                 <audio controls>
@@ -338,15 +352,17 @@ class DesignPage extends React.Component {
                 Your browser does not support the audio element.
                 </audio>
                 </div>
-                </div>
+                </div>*/}
 
 
                 {/*<!--========================================
                   CENTER DESIGN SECTION
                   =========================================-->*/}
                 <div className="main">
-                <h2 className="h_white">SAMPLE VIEW</h2>
+                <h2 className="h_white">QUESTIONAIRE</h2>
                 <div className="content">
+
+                
 
                 {/*<!--========================================
                   Fabric Canvas Section
@@ -370,12 +386,12 @@ class DesignPage extends React.Component {
                 {this.props.isLoggedIn?
                 // 로그인되어 있는 경우 - new(새로운 디자인 시작), save(현재 디자인 유저 그룹에 저장)
                 (<div>
-                 <button className="button rst_btn" type="button" onClick={() => this.resetDesignCheck}>RESET</button>
+                 <button className="button rst_btn" type="button" onClick={() => this.clickedNext}>Next</button>
                  <button className="button save_btn" type="button" onClick={this.clickedSubmit}>SUBMIT</button>
                  </div>)
                 // 로그인되어 있지 않은 경우 
                 : <div>
-                <button className="button rst_btn" type="button" onClick={() => this.resetDesignCheck}>RESET</button>
+                <button className="button rst_btn" type="button" onClick={() => this.clickedNext}>Next</button>
                 <button className="button save_btn" type="button" onClick={this.onClickLoggedOutSubmit}>SUBMIT</button>
                 </div>
                 }
@@ -391,15 +407,9 @@ class DesignPage extends React.Component {
                   RIGHT SIDE BAR
                   =========================================-->*/}
                 <div className="aside">
-                <h2 className="h_black">MY GROUP</h2>
+                <h2 className="h_black"></h2>
                 <div className="content">
-                {/*<GroupDesignList/>*/}
-                {/*{this.props.my_designs.map(design =>
-                  <GroupDesignList
-                    key={design.id}
-                    design={design}
-                  />
-                )}*/}
+               
                 </div>
                 </div>
                 </section>
@@ -411,14 +421,14 @@ const mapStateToProps = (state) => ({
     //state authorization is passed as props in designpage 
     isLoggedIn: state.authorization,
     profile_user: state.profile_user,
-    now_design: state.now_design,
+    //now_design: state.now_design,
 })
 
 const mapDispatchToProps = (dispatch) => ({
     onClickLogin: () => dispatch(changeUrl('/log_in/')),
     onClickJoin: () => dispatch(changeUrl('/sign_up/')),
-    onSave: (designid, design) => dispatch(toSaveDesign(designid, design)),
-    onReset: () => dispatch(toResetDesign()),
+    onSave: (value) => dispatch(toSaveDesign(value)),
+    //onReset: () => dispatch(toResetDesign()),
     //receives action onClickLogin and onClickJoin through props
 })
 
